@@ -2,7 +2,7 @@ var points = [];
 var numPoints = 200;
 
 function setup() {
-	createCanvas(500,500);
+	createCanvas(window.innerWidth,window.innerHeight);
 	for(var i = 0; i < numPoints; i++)
 		points.push(new PagePoint(Math.random()*width, Math.random()*height, randomCons(numPoints)));
 	//points.push(new PagePoint(Math.random()*width, Math.random()*height, [0,1,2,3,4,5,6,7]));
