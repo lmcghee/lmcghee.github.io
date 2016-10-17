@@ -4,13 +4,97 @@ var numPoints = 200;
 function setup() {
 	createCanvas(window.innerWidth,window.innerHeight);
 	makeName();
-	for(var i = 0; i < numPoints; i++)
-		points.push(new PagePoint(Math.random()*width, Math.random()*height, randomCons(numPoints)));
-	//points.push(new PagePoint(Math.random()*width, Math.random()*height, [0,1,2,3,4,5,6,7]));
+	// for(var i = 0; i < numPoints; i++)
+	// 	points.push(new PagePoint(Math.random()*width, Math.random()*height, randomCons(numPoints)));
 	background(0);
 	showCons();
 	// showPoints();
 }
+
+function draw() {
+	background(0);
+	// showPoints();
+	showCons();
+	updatePoints();
+
+}
+
+function updatePoints(){
+	for(i in points){
+		points[i].moveToCenter();
+
+		// Scary Mouse
+		var distance = dist(mouseX, mouseY, points[i].cord[0], points[i].cord[1]);
+		if (distance < height/4){
+			var angle = Math.atan2(points[i].cord[1] - mouseY, points[i].cord[0] - mouseX);
+			points[i].cord[0] = points[i].cord[0] + Math.cos(angle) * 20;
+			points[i].cord[1] = points[i].cord[1] + Math.sin(angle) * 20;
+		}
+	}
+}
+
+
+function thickLine(num){
+	var a = [];
+	var thickness = 10;
+	for(var i = 0; i < thickness; i++){
+		a.push(num);
+	}
+	return a;
+}
+
+function randomCons(num){
+	var a = [];
+	var randNum = Math.floor(Math.random()*(num-1)/10);
+	for(var i = 0; i<randNum; i++)
+		a.push(Math.floor(Math.random()*(num-1)));
+	return a;
+}
+
+
+function showPoints() {
+	for(i in points){
+		points[i].drawMe();
+		//console.log(points[i]);
+	}
+}
+
+function showCons(){
+	stroke(255, 20);
+	for(i in points){
+		for(j in points[i].connections){
+			line(points[i].cord[0], points[i].cord[1], points[points[i].connections[j]].cord[0], points[points[i].connections[j]].cord[1]);
+		}
+	}
+}
+
+class PagePoint{
+	constructor(xPos, yPos, cons){
+		this.size = 8;
+		this.connections = cons;
+		this.cord = [xPos, yPos];
+		this.origin = [xPos,yPos];
+	}
+	
+	// var cord = [xPos,yPos];
+	// var connections = cons;
+	// var size = Math.random()*40;
+
+	drawMe(){
+		fill(255, 200);
+		ellipse(this.cord[0],this.cord[1],this.size,this.size);
+	}
+
+	moveToCenter(){
+		if(this.cord != this.origin){
+			var distance = dist(this.origin[0], this.origin[1], this.cord[0], this.cord[1]);
+			var angle = Math.atan2(this.origin[1] - this.cord[1], this.origin[0] - this.cord[0]);
+			this.cord[0] = this.cord[0] + Math.cos(angle) * distance/2;
+			this.cord[1] = this.cord[1] + Math.sin(angle) * distance/2;
+		}
+	}
+}
+
 
 function makeName(){
 	var lastOffset = .1;
@@ -45,10 +129,10 @@ function makeName(){
 	points.push(new PagePoint(width*(firstOffset + .35), height*.6, []));
 	points.push(new PagePoint(width*(firstOffset + .325), height*.6, thickLine(15)));
 	
-	points.push(new PagePoint(width*(firstOffset + .3125), height*.625, thickLine(13))); // a-line
+	// G and A bits
+	points.push(new PagePoint(width*(firstOffset + .3), height*.6125, thickLine(13))); // a-line
 	points.push(new PagePoint(width*(firstOffset + .25), height*.7, thickLine(9)));
-	points.push(new PagePoint(width*(firstOffset + .225), height*.7, thickLine(20))); 
-	// First name end, pointcount 21.
+	points.push(new PagePoint(width*(firstOffset + .225), height*.7, thickLine(20))); //21
 
 	// M
 	points.push(new PagePoint(width*(lastOffset + .4), height*.6, thickLine(23)));
@@ -94,66 +178,4 @@ function makeName(){
 	points.push(new PagePoint(width*(lastOffset + .7), height*.6, thickLine(53)));
 	points.push(new PagePoint(width*(lastOffset + .725), height*.6, []));
 
-}
-
-function thickLine(num){
-	var a = [];
-	var thickness = 10;
-	for(var i = 0; i < thickness; i++){
-		a.push(num);
-	}
-	return a;
-}
-
-function randomCons(num){
-	var a = [];
-	var randNum = Math.floor(Math.random()*(num-1)/10);
-	for(var i = 0; i<randNum; i++)
-		a.push(Math.floor(Math.random()*(num-1)));
-	return a;
-}
-
-function draw() {
-	//background(0);
-	//showPoints();
-	// showCons();
-}
-
-function showPoints() {
-	for(i in points){
-		points[i].drawMe();
-		//console.log(points[i]);
-	}
-}
-
-function showCons(){
-	stroke(255, 20);
-	for(i in points){
-		for(j in points[i].connections){
-			line(points[i].cord[0], points[i].cord[1], points[points[i].connections[j]].cord[0], points[points[i].connections[j]].cord[1]);
-		}
-	}
-}
-
-class PagePoint{
-	constructor(xPos, yPos, cons){
-		this.size = 8;
-		this.connections = cons;
-		this.cord = [xPos, yPos];
-	}
-	
-	// var cord = [xPos,yPos];
-	// var connections = cons;
-	// var size = Math.random()*40;
-
-	drawMe(){
-		fill(255, 200);
-		ellipse(this.cord[0],this.cord[1],this.size,this.size);
-	}
-
-	drawConnections(){
-		for(i in connections){
-			console.log(connections[i]);
-		}
-	}
 }
