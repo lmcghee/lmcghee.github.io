@@ -27327,6 +27327,7 @@ cr.getObjectRefTable = function () {
 		cr.system_object.prototype.exps.windowheight,
 		cr.system_object.prototype.cnds.OnLayoutStart,
 		cr.system_object.prototype.acts.GoToLayout,
+		cr.plugins_.Text.prototype.acts.Destroy,
 		cr.plugins_.Sprite.prototype.cnds.CompareX,
 		cr.plugins_.Sprite.prototype.acts.SetX,
 		cr.system_object.prototype.exps.viewportright
